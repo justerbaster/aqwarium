@@ -1,9 +1,6 @@
 # Dependencies
 node_modules/
 
-# Backend (Maven)
-backend/target/
-
 # Env and secrets
 .env
 .env.local

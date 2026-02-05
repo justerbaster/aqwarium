@@ -1,9 +1,0 @@
-# Railway: backend service (Spring Boot)
-[build]
-builder = "nixpacks"
-buildCommand = "mvn -q -DskipTests package"
-
-[deploy]
-startCommand = "java -Dserver.port=$PORT -jar target/*.jar"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
