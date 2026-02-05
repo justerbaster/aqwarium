@@ -1,63 +1,60 @@
-# Deploy on Railway (frontend + backend separately)
+# Deploy on Railway (frontend + backend из одного репо)
 
-Деплой в два сервиса: **фронтенд** (этот репозиторий) и **бэкенд** (Spring Boot — отдельный репозиторий). Потом соединяете фронт с бэком через URL API.
-
----
-
-## 1. Фронтенд (этот проект)
-
-- Репозиторий: ваш форк или клон с фронтом (HTML/CSS/JS + `serve`).
-- На Railway: **New Project → Deploy from GitHub** → выберите репозиторий с этим фронтом.
-- Корень репозитория = корень фронта (где лежат `index.html`, `game.html`, `package.json`).
-- Railway сам поднимет `npm install` и `npm start` (статический сервер на порту `PORT`).
-- После деплоя получите URL вида `https://aqwarium-frontend.up.railway.app`.
-
-Локальная проверка перед пушем:
-
-```bash
-npm install
-npm start
-# Открой http://localhost:3333
-```
+Один репозиторий, **два сервиса** на Railway: фронтенд и бэкенд. У каждого сервиса свой **Root Directory**.
 
 ---
 
-## 2. Бэкенд (отдельный репозиторий)
+## 1. Подключить репозиторий к Railway
 
-- Репозиторий: [Fish_Aqwarium_Project_SpringBoot](https://github.com/dumidu27730/Fish_Aqwarium_Project_SpringBoot) (Java/Spring Boot).
-- На Railway: **New Project → Deploy from GitHub** → выберите этот репозиторий.
-- Укажите root directory, если бэкенд не в корне репо.
-- Задайте переменные окружения (БД, секреты и т.д.) в настройках сервиса.
-- После деплоя получите URL API, например `https://aqwarium-backend.up.railway.app`.
+- [Railway](https://railway.app) → **New Project** → **Deploy from GitHub**.
+- Выберите репозиторий **justerbaster/aqwarium** (или ваш форк).
 
 ---
 
-## 3. Соединение фронта и бэка
+## 2. Сервис «Фронтенд»
 
-1. Скопируйте URL бэкенда с Railway (например `https://aqwarium-backend.up.railway.app`).
-2. Во фронтенде задайте этот URL одним из способов:
-   - **Вариант A:** в `index.html` и `game.html` добавьте в `<head>`:
-     ```html
-     <meta name="aqwarium-api-url" content="https://your-backend.railway.app">
-     ```
-     (скрипт `js/config.js` прочитает его в `window.AQWARIUM_API_URL`).
-   - **Вариант B:** позже в коде можно заменить на переменную окружения Railway (через сборку или серверную подстановку).
-3. В коде запросов к API используйте `window.AQWARIUM_API_URL` как базовый URL (уже подготовлено в `js/config.js`).
+- В проекте Railway создайте сервис (или добавьте второй): **New** → **GitHub Repo** → тот же репозиторий.
+- В настройках сервиса:
+  - **Root Directory:** `frontend`
+  - **Build:** автоматически (`npm install`)
+  - **Start:** `npm start` (уже задано в `frontend/railway.toml`)
+- Сохраните. Railway задеплоит статику через `serve` на порту `PORT`.
+- В **Settings** → **Networking** включите **Generate Domain**. Получите URL вида `https://aqwarium-frontend.up.railway.app`.
 
 ---
 
-## 4. Пуш этого проекта (фронт) в Git
+## 3. Сервис «Бэкенд»
 
-Если репозиторий ещё не создан:
+- В том же проекте: **New** → **GitHub Repo** → тот же репозиторий.
+- В настройках сервиса:
+  - **Root Directory:** `backend`
+  - **Build:** `mvn -q -DskipTests package` (задано в `backend/railway.toml`)
+  - **Start:** `java -Dserver.port=$PORT -jar target/*.jar`
+- Переменные окружения (в **Variables**):
+  - `MYSQL_URL` — URL MySQL (если подключаете Railway MySQL, подставьте выданный URL).
+  - `MYSQL_USER`, `MYSQL_PASSWORD` — при использовании своей БД.
+- В **Networking** включите **Generate Domain**. URL API: `https://aqwarium-backend.up.railway.app`.
 
-```bash
-cd /Users/admin/Documents/aqwarium
-git init
-git add .
-git commit -m "Frontend: ready for Railway deploy"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/aqwarium-frontend.git
-git push -u origin main
-```
+---
 
-Замените `YOUR_USERNAME/aqwarium-frontend` на ваш репозиторий. Затем в Railway выберите этот репозиторий для деплоя фронта.
+## 4. Соединение фронта и бэка
+
+1. Скопируйте URL бэкенда (например `https://aqwarium-backend.up.railway.app`).
+2. Во фронте задайте его через `<meta>` в `frontend/index.html` и `frontend/game.html` в `<head>`:
+
+   ```html
+   <meta name="aqwarium-api-url" content="https://ваш-бэкенд.railway.app">
+   ```
+
+   Скрипт `frontend/js/config.js` прочитает значение в `window.AQWARIUM_API_URL`; в запросах к API используйте этот базовый URL.
+
+---
+
+## Кратко
+
+| Сервис   | Root Directory | Что деплоится        |
+|----------|----------------|----------------------|
+| Frontend | `frontend`     | Node + serve (статика) |
+| Backend  | `backend`      | Maven + Spring Boot JAR |
+
+Оба сервиса берут код из одного и того же репозитория на GitHub.

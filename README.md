@@ -2,37 +2,45 @@
 
 Симуляция: аквариум с 5 агентами-рыбами (один LLM, разные промпты). Каждые 5 минут общий вопрос → ответы в хаотичном порядке → голосование (агент не голосует за себя) → выдача еды. Кто без голосов — не получает еду; два раунда подряд без еды — смерть.
 
-## Запуск
-
-Нужен HTTP-сервер (из-за загрузки спрайтов и ES-модулей). Из корня проекта:
-
-```bash
-# Python 3
-python3 -m http.server 3333
-
-# или npx
-npx serve -l 3333 .
-```
-
-Открой в браузере: **http://localhost:3333**
+Репозиторий — **монорепо**: фронт и бэк в одном репо, для деплоя на Railway как два отдельных сервиса.
 
 ## Структура
 
-- **index.html** — один экран: сверху панель вопроса (иероглифами), по центру canvas аквариума, снизу HUD со статусом рыб.
-- **css/aquarium.css** — стили панели, оверлея ответов/голосования, HUD.
-- **js/main.js** — точка входа: загрузка спрайтов, инициализация аквариума и игрового цикла.
-- **js/aquarium.js** — отрисовка воды, дна, водорослей, пузырей, рыб (Kenney Fish Pack).
-- **js/sprites.js** — пути к spritesheet, координаты спрайтов рыб/фона.
-- **js/game.js** — фазы раунда (question → think → answer → vote → feed), таймер, здоровье/еда/смерть.
-- **js/agents.js** — конфиг 5 агентов, mock-ответы, голосование (позже — вызов бесплатной LLM).
-- **js/cipher.js** — кодирование текста в иероглифы для отображения пользователю.
+```
+aqwarium/
+├── frontend/          # Статика (HTML/CSS/JS) + serve
+│   ├── index.html, game.html, docs.html
+│   ├── css/, js/, assets/, kenney_fish-pack_2/
+│   ├── package.json
+│   └── railway.toml
+├── backend/            # Spring Boot (Java, Maven)
+│   ├── pom.xml
+│   ├── src/
+│   └── railway.toml
+├── README.md
+└── DEPLOY.md           # Инструкция по деплою на Railway
+```
 
-Спрайты берутся из **kenney_fish-pack_2/Spritesheet/spritesheet.png**.
+## Запуск локально
 
-## Настройки
+**Фронтенд** (из папки `frontend/`):
 
-- Длительность раунда и фаз — в **js/game.js** (константы вверху). Сейчас раунд 40 сек для теста; для «5 минут» поставь `ROUND_INTERVAL_MS = 5 * 60 * 1000`.
+```bash
+cd frontend
+npm install
+npm start
+# Открой http://localhost:3333
+```
+
+**Бэкенд** (из папки `backend/`):
+
+```bash
+cd backend
+./mvnw spring-boot:run
+# или mvn spring-boot:run
+# Нужна MySQL (по умолчанию localhost:3306, user root, password 1234).
+```
 
 ## Деплой на Railway
 
-Фронт и бэк деплоятся **отдельно**: этот репозиторий — фронтенд, бэкенд — [Fish_Aqwarium_Project_SpringBoot](https://github.com/dumidu27730/Fish_Aqwarium_Project_SpringBoot). Подробно: **[DEPLOY.md](DEPLOY.md)**.
+Фронт и бэк деплоятся **двумя сервисами** из одного репозитория. Подробно: **[DEPLOY.md](DEPLOY.md)**.
