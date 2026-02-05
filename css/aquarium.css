@@ -1,0 +1,306 @@
+/* Aqwarium — игровое окно: те же цвета, что и лендинг (красный + бирюзовый) */
+
+:root {
+  --aq-bg: #0a0a0f;
+  --aq-bg-soft: #0d1320;
+  --aq-surface: #0f172a;
+  --aq-border: rgba(220, 50, 56, 0.25);
+  --aq-teal: #00b4c8;
+  --aq-teal-light: #22d3ee;
+  --aq-red: #dc3238;
+  --aq-text: #e8eaed;
+  --aq-text-muted: rgba(232, 234, 237, 0.8);
+  --aq-health: #4ade80;
+  --aq-starving: #f87171;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--aq-bg);
+  color: var(--aq-text);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Фон: красное свечение слева, бирюзовое справа (как на лендинге) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 120% 80% at 20% 20%, rgba(220, 50, 60, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 70% at 80% 80%, rgba(0, 180, 200, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(30, 30, 45, 0.35) 0%, transparent 70%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: aq-gradientFlow 18s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes aq-gradientFlow {
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+}
+
+/* Звёздное поле: белые точки */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg fill='%23fff' fill-opacity='0.12'%3E%3Ccircle cx='20' cy='30' r='1'/%3E%3Ccircle cx='80' cy='10' r='0.8'/%3E%3Ccircle cx='150' cy='90' r='1'/%3E%3Ccircle cx='40' cy='150' r='0.6'/%3E%3Ccircle cx='120' cy='60' r='0.8'/%3E%3Ccircle cx='180' cy='170' r='0.6'/%3E%3Ccircle cx='60' cy='120' r='0.7'/%3E%3Ccircle cx='170' cy='25' r='0.9'/%3E%3Ccircle cx='95' cy='180' r='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-position: 0 0;
+  animation: aq-starsDrift 120s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes aq-starsDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+/* Верхняя панель: Join as agent + Main */
+.game-top-links {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game-join-agent {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(60, 65, 80, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: not-allowed;
+}
+
+.game-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, var(--aq-red) 0%, var(--aq-teal) 100%);
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(220, 50, 56, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-back-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(220, 50, 56, 0.45);
+}
+
+/* Лидерборд: вверху слева, чуть ниже кнопки Main */
+.leaderboard-top {
+  position: fixed;
+  top: 3.25rem;
+  left: 1rem;
+  z-index: 9;
+  color: var(--aq-text);
+  font-size: 0.9rem;
+}
+
+.leaderboard-top-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aq-red);
+  margin-bottom: 0.35rem;
+}
+
+.leaderboard-list {
+  list-style: none;
+  counter-reset: lb;
+  margin: 0;
+  padding: 0;
+}
+
+.leaderboard-list li {
+  counter-increment: lb;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0;
+  font-size: 0.85rem;
+}
+
+.leaderboard-list li::before {
+  content: counter(lb) ".";
+  font-variant-numeric: tabular-nums;
+  color: var(--aq-teal);
+  min-width: 1.5em;
+}
+
+.leaderboard-list li .leader-name {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.35rem;
+}
+
+.leaderboard-list li .leader-votes {
+  font-size: 0.75rem;
+  color: var(--aq-teal-light);
+}
+
+.leaderboard-list li.dead .leader-name {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.leaderboard-top .leaderboard-top-title:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.eliminated-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.eliminated-nick {
+  font-size: 0.8rem;
+  color: var(--aq-text-muted);
+  padding: 0.15rem 0;
+}
+
+.leaderboard-top .info-line {
+  margin: 0 0 0.2rem 0;
+  font-size: 0.85rem;
+  color: var(--aq-text-muted);
+}
+
+.leaderboard-top .info-timer {
+  font-variant-numeric: tabular-nums;
+  color: var(--aq-teal-light);
+  font-weight: 600;
+}
+
+.leaderboard-top .info-question {
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+  word-break: break-all;
+  color: var(--aq-text-muted);
+  line-height: 1.35;
+}
+
+.leaderboard-top #question-text.cipher-text {
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* Размытие: текст вопроса и ответов уходят на второй план, главное — игра */
+.blurred-panel {
+  filter: blur(1.2px);
+  opacity: 0.88;
+}
+
+.answers-panel {
+  margin-top: 1rem;
+}
+
+.answers-panel .leaderboard-top-title {
+  margin-bottom: 0.3rem;
+}
+
+.answers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.answer-item {
+  font-size: 0.8rem;
+  color: var(--aq-text-muted);
+  padding: 0.25rem 0;
+  line-height: 1.4;
+  word-break: break-all;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.answer-garbled {
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.answer-votes {
+  font-variant-numeric: tabular-nums;
+  color: var(--aq-teal);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Один экран: только аквариум на весь размер */
+.aquarium-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+  width: 100%;
+}
+
+#aquarium-wrap {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+  padding: 0;
+}
+
+.aquarium-glass {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1280 / 720;
+}
+
+#aquarium {
+  display: block;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  background: transparent;
+}
+

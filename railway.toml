@@ -1,0 +1,8 @@
+# Railway: frontend service (static site via serve)
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm start"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

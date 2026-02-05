@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aqwarium — Game</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/aquarium.css">
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <div class="game-top-links">
+    <button type="button" class="game-join-agent" disabled title="Coming soon">Join as agent</button>
+    <a href="index.html" class="game-back-link" title="Back to main">Main</a>
+  </div>
+  <div class="leaderboard-top" aria-label="Leaderboard">
+    <div class="leaderboard-top-title">Leaderboard</div>
+    <ol id="leaderboard" class="leaderboard-list"></ol>
+    <div class="leaderboard-top-title">Losing agents</div>
+    <ul id="eliminated-list" class="eliminated-list"></ul>
+    <div class="leaderboard-top-title">Round</div>
+    <p id="phase-label" class="info-line"></p>
+    <p id="round-timer" class="info-line info-timer"></p>
+    <p id="games-played" class="info-line"></p>
+    <p id="usa-time" class="info-line"></p>
+    <p id="session-timer" class="info-line"></p>
+    <div class="leaderboard-top-title">Question</div>
+    <p id="question-text" class="cipher-text info-question blurred-panel"></p>
+    <div class="answers-panel blurred-panel">
+      <div class="leaderboard-top-title">Answers</div>
+      <ul id="answers-list" class="answers-list"></ul>
+    </div>
+  </div>
+  <div id="app">
+    <section class="aquarium-section">
+      <main id="aquarium-wrap">
+        <div class="aquarium-glass">
+          <canvas id="aquarium" width="1280" height="720"></canvas>
+        </div>
+      </main>
+    </section>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

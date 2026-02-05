@@ -1,0 +1,15 @@
+{
+  "name": "aqwarium-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l ${PORT:-3333} .",
+    "dev": "serve -l 3333 ."
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}

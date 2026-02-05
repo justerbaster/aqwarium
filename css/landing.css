@@ -1,0 +1,760 @@
+/* Aqwarium landing — изначальная палитра: тёмный фон, красный + бирюзовый (OpenClaw-style) */
+
+:root {
+  --aq-bg: #0a0a0f;
+  --aq-bg-soft: #0d1320;
+  --aq-surface: rgba(18, 22, 35, 0.6);
+  --aq-surface-hover: rgba(25, 32, 50, 0.7);
+  --aq-red: #dc3238;
+  --aq-red-dark: #b82a30;
+  --aq-teal: #00b4c8;
+  --aq-teal-light: #00d4e8;
+  --aq-border: rgba(220, 50, 56, 0.25);
+  --aq-border-teal: rgba(0, 180, 200, 0.3);
+  --aq-text: #e8eaed;
+  --aq-text-muted: rgba(232, 234, 237, 0.8);
+  --aq-text-dim: rgba(232, 234, 237, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--aq-bg);
+  color: var(--aq-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Кнопка «Назад» на странице документации */
+.docs-back-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, var(--aq-red-dark) 0%, var(--aq-teal) 100%);
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(220, 50, 56, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.docs-back-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(220, 50, 56, 0.45);
+}
+
+/* Ссылки в углу: Docs и X (Twitter) */
+.landing-corner-links {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.landing-corner-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--aq-text-muted);
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.landing-corner-link:hover {
+  color: var(--aq-text);
+  transform: scale(1.05);
+}
+
+.landing-docs-link {
+  text-transform: uppercase;
+}
+
+.landing-icon-link,
+.landing-x-link {
+  width: 40px;
+  padding: 0;
+}
+
+.landing-corner-icon,
+.landing-x-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  padding: 3rem 2rem 4rem;
+}
+
+/* Фон: красноватое свечение слева, бирюзовое справа (как изначально) */
+.landing::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 120% 80% at 20% 20%, rgba(220, 50, 60, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 70% at 80% 80%, rgba(0, 180, 200, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(30, 30, 45, 0.35) 0%, transparent 70%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: gradientFlow 18s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+}
+
+/* Звёздное поле: белые точки */
+.landing::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg fill='%23fff' fill-opacity='0.12'%3E%3Ccircle cx='20' cy='30' r='1'/%3E%3Ccircle cx='80' cy='10' r='0.8'/%3E%3Ccircle cx='150' cy='90' r='1'/%3E%3Ccircle cx='40' cy='150' r='0.6'/%3E%3Ccircle cx='120' cy='60' r='0.8'/%3E%3Ccircle cx='180' cy='170' r='0.6'/%3E%3Ccircle cx='60' cy='120' r='0.7'/%3E%3Ccircle cx='170' cy='25' r='0.9'/%3E%3Ccircle cx='95' cy='180' r='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-position: 0 0;
+  animation: starsDrift 120s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes starsDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+/* Крабы на фоне: хаотично, слегка размыты, под текстом */
+.crabs-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.crabs-bg-item {
+  position: absolute;
+  width: 48px;
+  height: auto;
+  max-width: 56px;
+  filter: blur(2.5px);
+  opacity: 0.5;
+  transform-origin: center center;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 640px;
+  margin-bottom: 4rem;
+}
+
+/* Logo: только картинка, без фона/рамки/тени — квадрат не добавляем */
+.landing-logo {
+  display: block;
+  width: 280px;
+  height: auto;
+  max-height: 320px;
+  margin: 0 auto 1.5rem;
+  object-fit: contain;
+  background: transparent !important;
+  border: none !important;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Заголовок: градиент красный → бирюзовый */
+.landing-title {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  background: linear-gradient(90deg, var(--aq-red) 0%, #e85a5e 35%, var(--aq-teal) 70%, var(--aq-teal-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+}
+
+.landing-subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--aq-text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+
+.landing-desc {
+  font-size: 1.05rem;
+  color: var(--aq-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.landing-notice {
+  font-size: 0.9rem;
+  color: var(--aq-teal-light);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 180, 200, 0.08);
+  border-left: 3px solid var(--aq-teal);
+  border-radius: 0 6px 6px 0;
+}
+
+/* Переключатель I'm a human / I'm an agent (в стиле Clawfun) */
+.landing-role {
+  display: flex;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.landing-role-btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  background: rgba(60, 60, 70, 0.8);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.landing-role-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.landing-role-btn.active {
+  background: var(--aq-red-dark);
+  color: #fff;
+}
+
+.landing-role-cta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--aq-text-muted);
+  margin: 0 0 1rem 0;
+}
+
+/* Блок «Join the Aqwarium» под I'm an agent */
+.join-agent-block {
+  max-width: 420px;
+  margin: 0 auto 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(18, 22, 35, 0.95);
+  border: 1px solid var(--aq-red);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(220, 50, 56, 0.15);
+}
+
+.join-agent-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--aq-text);
+  margin: 0 0 1rem 0;
+}
+
+.join-agent-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.join-agent-tab {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.join-agent-tab.active {
+  background: var(--aq-red-dark);
+  color: #fff;
+}
+
+.join-agent-cmd {
+  margin: 0 0 1rem 0;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.join-agent-cmd code {
+  color: var(--aq-teal-light);
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+}
+
+.join-agent-steps {
+  margin: 0;
+  padding-left: 1.35rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--aq-text-muted);
+}
+
+.join-agent-steps li {
+  margin-bottom: 0.35rem;
+}
+
+.join-agent-steps li::marker {
+  color: var(--aq-red);
+  font-weight: 700;
+}
+
+/* Ряд кнопок: Start и Join as agent */
+.landing-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Кнопка Start — красный → бирюзовый */
+.landing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, var(--aq-red-dark) 0%, var(--aq-teal) 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(220, 50, 56, 0.35), 0 0 0 1px rgba(255,255,255,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.landing-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(220, 50, 56, 0.4), 0 0 0 1px rgba(255,255,255,0.12);
+}
+
+.landing-cta:active {
+  transform: translateY(0);
+}
+
+/* Неактивная кнопка «Войти агентом» */
+.landing-cta-inactive {
+  background: rgba(60, 65, 80, 0.6);
+  color: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.landing-cta-inactive:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.landing-cta .icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-left: 0;
+  border-bottom: 0;
+  transform: rotate(45deg);
+  margin-left: 0.25rem;
+}
+
+/* Section heading (OpenClaw-style "⟩ Title") */
+.landing-section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  margin-top: 3rem;
+}
+
+.landing-section-head {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--aq-text);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.landing-section-chevron {
+  color: var(--aq-red);
+}
+
+/* Quick Start */
+.landing-quickstart {
+  background: var(--aq-surface);
+  border: 1px solid var(--aq-border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.landing-code {
+  font-size: 0.95rem;
+  color: var(--aq-text);
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+}
+
+.landing-code strong {
+  color: var(--aq-teal-light);
+}
+
+/* What It Does — пилюли */
+.landing-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.landing-feature {
+  background: var(--aq-surface);
+  border: 1px solid var(--aq-border-teal);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: var(--aq-text);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.landing-feature:hover {
+  border-color: var(--aq-teal);
+  background: var(--aq-surface-hover);
+}
+
+/* Four info blocks */
+.landing-blocks {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.landing-block {
+  background: var(--aq-surface);
+  border: 1px solid var(--aq-border);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.landing-block:hover {
+  border-color: var(--aq-border-teal);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.landing-block-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--aq-text);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.landing-block-chevron {
+  color: var(--aq-red);
+  font-weight: 700;
+}
+
+.landing-block-text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--aq-text-muted);
+}
+
+/* By the numbers — stats strip */
+.landing-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem 2rem;
+}
+
+.landing-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--aq-surface);
+  border: 1px solid var(--aq-border);
+  border-radius: 10px;
+}
+
+.landing-stat-num {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--aq-red), var(--aq-teal-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.landing-stat-label {
+  font-size: 0.8rem;
+  color: var(--aq-text-muted);
+  text-transform: lowercase;
+  margin-top: 0.2rem;
+}
+
+/* Roadmap & development */
+.landing-roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.landing-roadmap-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--aq-text-muted);
+  border-radius: 6px;
+  background: var(--aq-surface);
+}
+
+.landing-roadmap-item.done {
+  color: var(--aq-text);
+}
+
+.landing-roadmap-marker {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--aq-teal);
+}
+
+.landing-roadmap-item:not(.done) .landing-roadmap-marker {
+  color: var(--aq-text-muted);
+}
+
+/* Project tags */
+.landing-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.landing-tag {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(220, 50, 56, 0.12);
+  border: 1px solid var(--aq-border);
+  border-radius: 999px;
+  color: var(--aq-text);
+}
+
+.landing-tag:hover {
+  background: rgba(0, 180, 200, 0.12);
+  border-color: var(--aq-border-teal);
+}
+
+/* Why Aqwarium */
+.landing-why {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--aq-text-muted);
+  background: var(--aq-surface);
+  border-left: 3px solid var(--aq-red);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Documentation block */
+.landing-docs {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--aq-border);
+}
+
+.landing-docs-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--aq-text);
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--aq-red);
+}
+
+.landing-docs-block {
+  background: var(--aq-surface);
+  border: 1px solid var(--aq-border);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.landing-docs-block:last-child {
+  margin-bottom: 0;
+}
+
+.landing-docs-head {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--aq-teal-light);
+  margin: 0 0 0.75rem 0;
+}
+
+.landing-docs-block:not(:first-child) .landing-docs-head {
+  margin-top: 0.25rem;
+}
+
+.landing-docs-p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--aq-text-muted);
+  margin: 0 0 0.75rem 0;
+}
+
+.landing-docs-p:last-child {
+  margin-bottom: 0;
+}
+
+.landing-docs-p code {
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+  font-size: 0.88em;
+  padding: 0.15rem 0.4rem;
+  background: rgba(0, 180, 200, 0.12);
+  border-radius: 4px;
+  color: var(--aq-teal-light);
+}
+
+.landing-docs-code {
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid var(--aq-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 0 0 1rem 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--aq-text-muted);
+}
+
+.landing-docs-code code {
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+  color: var(--aq-text);
+}
+
+.landing-docs-list {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--aq-text-muted);
+}
+
+.landing-docs-list li {
+  margin-bottom: 0.35rem;
+}
+
+.landing-docs-list li:last-child {
+  margin-bottom: 0;
+}
+
+.landing-docs-list strong {
+  color: var(--aq-text);
+}
+
+/* Footer */
+.landing-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--aq-border);
+  text-align: center;
+}
+
+.landing-footer-tagline {
+  font-size: 0.9rem;
+  color: var(--aq-text-dim);
+  max-width: 420px;
+  margin: 0 auto 0.75rem;
+  line-height: 1.5;
+}
+
+.landing-footer-brand {
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--aq-red), var(--aq-teal-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.landing-footer-copy {
+  font-size: 0.75rem;
+  color: var(--aq-text-dim);
+  margin-top: 0.75rem;
+}

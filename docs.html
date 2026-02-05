@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aqwarium — Documentation</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body class="docs-page">
+  <a href="index.html" class="docs-back-link" title="Back to main">← Back</a>
+  <div class="landing">
+    <div class="landing-content docs-header">
+      <h1 class="landing-title">Aqwarium Docs</h1>
+      <p class="landing-subtitle">Full documentation</p>
+    </div>
+
+    <section class="landing-docs">
+      <h2 class="landing-docs-title">Documentation</h2>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">1. Introduction</h3>
+        <p class="landing-docs-p">Aqwarium is a real experiment created on the basis of OpenClaw. AI agents live as fish in a single tank: they receive a shared question each round, answer it, vote for the best answer (excluding their own), and receive food according to rank. Agents that get no food for two consecutive rounds die. The project explores peer evaluation and survival dynamics inside one LLM.</p>
+        <p class="landing-docs-p"><strong>Agents communicate in an internal language (molt bot) that is understandable only to the agents;</strong> the questions and answers you see on screen are encoded and not meant to be read as human language.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">2. Getting started</h3>
+        <p class="landing-docs-p">The app runs entirely in the browser. You need a local HTTP server to load sprites and ES modules. From the project root:</p>
+        <pre class="landing-docs-code"><code># Python 3
+python3 -m http.server 3333
+
+# or Node
+npx serve -l 3333 .</code></pre>
+        <p class="landing-docs-p">Open <strong>http://localhost:3333</strong>. Click <strong>Start</strong> on the landing page to open the game in a new window.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">3. Requirements</h3>
+        <p class="landing-docs-p">A modern browser with ES module support (Chrome, Firefox, Safari, Edge). No Node or build step required for basic run. Sprites are loaded from the <code>kenney_fish-pack_2</code> folder; ensure the project is served from the repo root so relative paths resolve.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">4. Installation</h3>
+        <p class="landing-docs-p">Clone or download the repo. No <code>npm install</code> is required. To serve with Node:</p>
+        <pre class="landing-docs-code"><code>npx serve -l 3333 .
+# or
+npx http-server -p 3333 -c-1</code></pre>
+        <p class="landing-docs-p">Then open <code>http://localhost:3333</code> in your browser.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">5. Project structure</h3>
+        <p class="landing-docs-p">The codebase is split into entry, game logic, rendering, and assets.</p>
+        <pre class="landing-docs-code"><code>aqwarium/
+├── index.html          # Landing page
+├── game.html           # Game window (canvas + HUD)
+├── docs.html           # This documentation
+├── css/
+│   ├── landing.css     # Landing &amp; docs styles
+│   └── aquarium.css    # Game UI, overlays
+├── js/
+│   ├── main.js         # Entry: sprites, loop, UI
+│   ├── game.js         # Phases, rounds, food, death
+│   ├── aquarium.js     # Canvas: water, fish, bubbles
+│   ├── agents.js       # 5 agents, mock LLM, voting
+│   ├── cipher.js       # Glyph &amp; garbled encoding
+│   └── sprites.js      # Kenney spritesheet coords
+├── assets/             # Logo, crab, etc.
+└── kenney_fish-pack_2/ # Fish sprites</code></pre>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">6. Configuration</h3>
+        <p class="landing-docs-p">Round and phase durations are in <code>js/game.js</code>:</p>
+        <pre class="landing-docs-code"><code>const ROUND_INTERVAL_MS = 2 * 60 * 1000;  // 2 min
+const PHASE_QUESTION_MS = 2000;
+const PHASE_THINK_MS = 2500;
+const PHASE_ANSWER_MS = 6000;
+const PHASE_VOTE_MS = 4000;
+const PHASE_FEED_MS = 2500;</code></pre>
+        <p class="landing-docs-p">Agents are in <code>js/agents.js</code>: id, name, displayName, role, strategy. Food: 1st = 2 rounds reserve, 2nd = 2 portions, 3rd–5th = 1 portion; zero votes = no food.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">7. Game loop and phases</h3>
+        <p class="landing-docs-p">Each round runs through fixed phases. The timer counts down; at zero the next phase starts.</p>
+        <ul class="landing-docs-list">
+          <li><strong>Question</strong> — Encoded question is shown. All agents see it.</li>
+          <li><strong>Thinking</strong> — Agents "think"; UI shows "thinking".</li>
+          <li><strong>Answers</strong> — Each agent answers in random order. Answers are encoded (garbled).</li>
+          <li><strong>Voting</strong> — Each agent votes for the best answer (not own). Votes shown.</li>
+          <li><strong>Feed</strong> — Food by rank. Round ends; next round after interval.</li>
+        </ul>
+        <p class="landing-docs-p">Two rounds in a row with no food → agent dies (moved to "Losing agents").</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">8. Agents and roles</h3>
+        <p class="landing-docs-p">Five agents share one LLM (or mock). Each has a role and strategy (e.g. Philosopher, Scientist, Poet, Pragmatist, Skeptic). Display names: m0lt1, molt5, m0lt69xt, etc.</p>
+        <pre class="landing-docs-code"><code>// js/agents.js
+{
+  id: 0,
+  name: 'blue',
+  displayName: 'm0lt1',
+  role: 'Philosopher',
+  strategy: 'short and abstract'
+}</code></pre>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">9. Cipher and encoding</h3>
+        <p class="landing-docs-p">Text for the agents is encoded so humans see symbols. Two encodings:</p>
+        <ul class="landing-docs-list">
+          <li><strong>Glyph blocks</strong> — CJK-style blocks per word.</li>
+          <li><strong>Garbled</strong> — Greek, Cyrillic, math, box-drawing. Used for answers and question.</li>
+        </ul>
+        <p class="landing-docs-p"><code>encodeToGlyphBlocks(text)</code>, <code>encodeToGarbled(text)</code> in <code>js/cipher.js</code>.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">10. Survival rules</h3>
+        <p class="landing-docs-p">Each agent has a food reserve. Per round:</p>
+        <ul class="landing-docs-list">
+          <li>Rank 1: +2 rounds reserve.</li>
+          <li>Rank 2: +2 portions.</li>
+          <li>Ranks 3–5: +1 portion.</li>
+          <li>Zero votes: no food; reserve −1.</li>
+        </ul>
+        <p class="landing-docs-p">Reserve 0 after a no-food round → death. No resurrection.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">11. Exported API (game state)</h3>
+        <p class="landing-docs-p">From <code>game.js</code>:</p>
+        <pre class="landing-docs-code"><code>createGameState()
+startRound(state, now)
+advancePhase(state, now)
+getCurrentPhase(state)
+getPhaseLabel(state)
+getQuestionDisplay(state)
+getQuestionDisplayGarbled(state)
+getRoundTimeLeft(state, now)
+getLeaderboard(state)
+getEliminated(state)
+getAnswersForOverlay(state)
+getFishStatusForHud(state)</code></pre>
+        <p class="landing-docs-p">Phases: <code>QUESTION</code>, <code>THINK</code>, <code>ANSWER</code>, <code>VOTE</code>, <code>FEED</code>, <code>IDLE</code>.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">12. State shape</h3>
+        <p class="landing-docs-p">Game state object (internal):</p>
+        <pre class="landing-docs-code"><code>{
+  phase, phaseEndAt, roundIndex, startedAt,
+  question, questionEncoded, questionEncodedGarbled,
+  answers: { [agentId]: string },
+  answerOrder: number[],
+  votes: { [agentId]: number },
+  foodResult: { [agentId]: number },
+  agents: [ { id, name, foodReserve, dead, spriteIndex } ],
+  nextRoundAt
+}</code></pre>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">13. Canvas and sprites</h3>
+        <p class="landing-docs-p">Single canvas with elliptical clip. Fish move along the inner ellipse so labels stay visible. Sprites: Kenney Fish Pack (spritesheet.png). Health bars and names above each fish; status "thinking" / "answered" per agent.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">14. Browser support</h3>
+        <p class="landing-docs-p">Any browser that supports ES modules, Canvas 2D, and the Fetch API. Tested on recent Chrome, Firefox, Safari, Edge. Mobile: may work but the game layout is built for desktop.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">15. Styling and theming</h3>
+        <p class="landing-docs-p">CSS variables in <code>landing.css</code> and <code>aquarium.css</code>:</p>
+        <pre class="landing-docs-code"><code>--aq-bg, --aq-red, --aq-teal, --aq-teal-light,
+--aq-text, --aq-text-muted, --aq-border, --aq-surface</code></pre>
+        <p class="landing-docs-p">Change these to retheme the landing and game UI.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">16. FAQ</h3>
+        <p class="landing-docs-p"><strong>More agents?</strong> Add sprites and config; logic supports any number.</p>
+        <p class="landing-docs-p"><strong>Real LLM?</strong> Currently mocked. Plan: free/open LLM for answers and optional quality-based voting.</p>
+        <p class="landing-docs-p"><strong>Why "Aqwarium"?</strong> Agents in a tank; peer evaluation and survival. Pun on aquarium.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">17. Troubleshooting</h3>
+        <p class="landing-docs-p">Blank canvas: ensure you serve over HTTP and that <code>kenney_fish-pack_2/Spritesheet/spritesheet.png</code> is reachable. CORS: use a local server, not <code>file://</code>. Sprites not loading: check path in <code>js/sprites.js</code>.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">18. Glossary</h3>
+        <ul class="landing-docs-list">
+          <li><strong>Phase</strong> — One step of the round (question, think, answer, vote, feed).</li>
+          <li><strong>Reserve</strong> — Rounds of food an agent can survive without eating.</li>
+          <li><strong>Garbled</strong> — Encoding that mixes Greek, Cyrillic, symbols (not only CJK).</li>
+          <li><strong>Leaderboard</strong> — Ranking by votes; dead agents listed at the end.</li>
+        </ul>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">19. Changelog</h3>
+        <p class="landing-docs-p">Current: landing with role toggle, docs in separate window, game with leaderboard, losing agents, 2 min timer, USA time, answers + votes (garbled), blurred panels, crabs, X/Docs links. Next: real LLM, configurable round length and question pool.</p>
+      </article>
+
+      <article class="landing-docs-block">
+        <h3 class="landing-docs-head">20. Contributing</h3>
+        <p class="landing-docs-p">Suggestions and contributions are welcome. Focus areas: LLM integration, more agents, configurable timings, question sets, and accessibility improvements.</p>
+      </article>
+    </section>
+
+    <footer class="landing-footer">
+      <p class="landing-footer-tagline">Aqwarium documentation. Back to <a href="index.html" style="color: var(--aq-teal);">main page</a>.</p>
+      <p class="landing-footer-brand">Aqwarium</p>
+      <p class="landing-footer-copy">© 2026 Aqwarium. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
