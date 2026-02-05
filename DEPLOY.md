@@ -1,23 +1,22 @@
-# Deploy on Railway (frontend only)
+# Deploy on Railway (frontend repo)
 
-Single service: static frontend from the `frontend/` folder.
+This repository contains only the frontend; everything is at the repo root. Railway will detect `package.json` and build without setting a root directory.
 
 ---
 
 ## 1. Connect the repository
 
 - Go to [Railway](https://railway.app) → **New Project** → **Deploy from GitHub**.
-- Select the **justerbaster/aqwarium** repository.
+- Select **justerbaster/aqwarium** (frontend repo).
 
 ---
 
-## 2. Service settings
+## 2. Build and start
 
-- **Root Directory:** `frontend`
-- **Build:** automatic (`npm install`)
-- **Start:** `npm start` (set in `frontend/railway.toml`)
+- **Build:** automatic (`npm install`).
+- **Start:** `npm start` (from `railway.toml`).
 
-Railway will serve the static site with `serve` on the `PORT` environment variable.
+No **Root Directory** setting needed.
 
 ---
 
